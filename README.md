@@ -2,7 +2,11 @@
 
 ## Database Overview
 
-The Chat Application Model Database is designed to provide a robust and structured data storage solution for a chat application. It serves as the backbone for managing user accounts, friend relationships, and chat messaging features within the application. This comprehensive documentation covers the database schema, tables, relationships, sample queries with outputs, and details about the implemented triggers.
+The [Chat Application Model Database](https://github.com/sudhanshutiwari264/Chat-Application-Database/blob/64eaa77ce77bc75e30fc7305ca845421003672a3/Chat_Application_DBMS.sql) is designed to provide a robust and structured data storage solution for a chat application. It serves as the backbone for managing user accounts, friend relationships, and chat messaging features within the application. This comprehensive documentation covers the database schema, tables, relationships, sample queries with outputs, and details about the implemented triggers.
+
+## ER-Diagram
+
+![./chat application_er.png](https://github.com/sudhanshutiwari264/Chat-Application-Database/blob/64eaa77ce77bc75e30fc7305ca845421003672a3/chat%20application_er.png "CHAT APP ER")
 
 ## Database Schema
 
