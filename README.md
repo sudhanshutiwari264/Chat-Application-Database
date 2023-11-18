@@ -12,125 +12,209 @@ The [Chat Application Model Database](https://github.com/sudhanshutiwari264/Chat
 
 The database schema consists of four primary tables: `admin`, `users`, `friends`, and `messages`. Each table serves a distinct purpose in supporting various aspects of the chat application.
 
-### 1. `admin` Table
+### Users Table
 
-- **Table Description**: This table is responsible for storing information about administrators of the chat application.
+- **Columns:**
+  - `ID` (INT, Primary Key): Unique identifier for each user.
+  - `Username` (VARCHAR): User's username.
+  - `Email` (VARCHAR): User's email address.
+  - `Status` (VARCHAR): User's status, can be 'Active' or 'Inactive'.
+  - `AuthenticationTime` (DATETIME): Timestamp of the user's last authentication.
 
-- **Columns**:
-  - `AdminId` (Primary Key): An auto-incremented unique identifier for administrators.
-  - `Fullname`: The full name of the administrator.
-  - `Username`: The administrator's username.
-  - `Email`: The administrator's email address.
-  - `Password`: The administrator's password for account access.
+### Friends Table
 
-### 2. `users` Table
+- **Columns:**
+  - `ID` (INT, Foreign Key): User ID.
+  - `FriendID` (INT, Foreign Key): Friend's ID.
 
-- **Table Description**: The `users` table is central to the database, managing user accounts and their related data.
+### Messages Table
 
-- **Columns**:
-  - `ID` (Primary Key): A unique identifier for users, auto-incremented.
-  - `Username`: The username of the user.
-  - `Email`: The email address associated with the user.
-  - `DateOfBirth`: The date of birth of the user, which can be used for age-related features.
-  - `Status`: User attendance status, which can be "Active" or "Inactive".
-  - `AuthenticationTime`: A timestamp that gets updated when a user sends a new message.
-  - `UserKey`: A unique user key associated with the user.
-  - `IP`: The user's IP address.
-  - `Port`: The port used by the user for communication.
-
-### 3. `friends` Table
-
-- **Table Description**: This table manages friend relationships between users, facilitating friend requests and connections.
-
-- **Columns**:
-  - `reqID` (Primary Key): An auto-incremented unique identifier for friend relationships.
-  - `ID`: The ID of the user initiating the friend request.
-  - `ProviderID`: The ID of the user who is the recipient of the friend request.
-
-### 4. `messages` Table
-
-- **Table Description**: The `messages` table stores chat messages exchanged between users.
-
-- **Columns**:
-  - `ID` (Primary Key): A unique identifier for chat messages, auto-incremented.
-  - `FROMUID`: The ID of the message sender.
-  - `ToUID`: The ID of the message receiver.
-  - `SentDt`: A timestamp recording the date and time when the message was sent.
-  - `ReadStatus`: A boolean flag (0 for unread, 1 for read).
-  - `ReadDt`: A timestamp recording when the message was read.
-  - `MessageText`: The content of the chat message.
-
-## Example Queries and Outputs
-
-To illustrate the functionality of the database, we provide example SQL queries with their corresponding outputs. These queries demonstrate how data can be retrieved and manipulated within the chat application.
-
-### Query 1: Retrieve All Users and Their Friendships
-
-```sql
-SELECT u.Username AS User, f.reqID, u2.Username AS Friend
-FROM users u
-LEFT JOIN friends f ON u.ID = f.ID
-LEFT JOIN users u2 ON f.ProviderID = u2.ID;
-```
-
-**Output**:
-| User     | reqID | Friend   |
-| -------- | ----- | -------- |
-| ARUN     | 1     | SUDHANSHU |
-| ARUN     | 2     | TARUN    |
-| SUDHANSHU | 3     | ARUN     |
-| TARUN    | 4     | ARUN     |
-| ARU      |       |          |
-| MORIN    | 6     | DEVANSHI |
-| DEVANSHI | 7     | SHEETAL  |
-| SHEETAL  | 8     | MOHAN    |
-| MOHAN    | 9     | RAHUL    |
-| RAHUL    |       |          |
-
-### Query 2: Retrieve Messages Sent by a Specific User with Sender and Receiver Details
-
-```sql
-SELECT m.ID, u1.Username AS Sender, u2.Username AS Receiver, m.SentDt, m.MessageText
-FROM messages m
-JOIN users u1 ON m.FROMUID = u1.ID
-JOIN users u2 ON m.ToUID = u2.ID;
-```
-
-**Output** (Sample data not shown here):
-
-| ID  | Sender   | Receiver | SentDt               | MessageText                |
-| --- | -------- | -------- | --------------------- | -------------------------- |
-| 1   | ARUN     | SUDHANSHU | 2023-11-06 10:00:00 | Hello, this is a message. |
-| 2   | SUDHANSHU | ARUN     | 2023-11-06 10:15:00 | Hi, this is a reply.      |
-
-### Query 3: Retrieve Unread Messages for a Specific User
-
-```sql
-SELECT m.ID, u1.Username AS Sender, u2.Username AS Receiver, m.SentDt, m.MessageText
-FROM messages m
-JOIN users u1 ON m.FROMUID = u1.ID
-JOIN users u2 ON m.ToUID = u2.ID
-WHERE m.ToUID = 1 AND m.ReadStatus = 0;
-```
-
-**Output** (Sample data not shown here):
-
-| ID  | Sender | Receiver | SentDt               | MessageText       |
-| --- | ------ | -------- | --------------------- | ----------------- |
-| 3   | TARUN  | ARUN     | 2023-11-06 10:30:00 | Unread message.   |
+- **Columns:**
+  - `ID` (INT, Primary Key): Unique identifier for each message.
+  - `FROMUID` (INT, Foreign Key): Sender's ID.
+  - `ToUID` (INT, Foreign Key): Receiver's ID.
+  - `MessageText` (TEXT): The content of the message.
+  - `SentDt` (DATETIME): Timestamp when the message was sent.
+  - `ReadStatus` (VARCHAR): Message read status, can be 'Read' or 'Unread'.
 
 ## Triggers
 
-Triggers are implemented in the database to perform specific actions automatically in response to certain events. Two triggers have been added to enhance real-time information management.
+1. **`updateAuthenticationTime` Trigger:**
+   - **Function:** Updates the `AuthenticationTime` of the sender when a new message is sent.
 
-### 1. `updateAuthenticationTime`
+2. **`updateUserKey` Trigger:**
+   - **Function:** Updates the `UserKey` based on the user's `Status` before each update.
 
-- **Trigger Description**: This trigger is executed after inserting a new message into the `messages` table. It updates the `AuthenticationTime` of the sender in the `users` table, allowing tracking of user activity.
+3. **`updateUserKeyOnStatusChange` Trigger:**
+   - **Function:** Updates `UserKey` when there is a change in the user's `Status`.
 
-### 2. `updateUserKey`
+4. **`updateAuthTimeOnFriendAdd` Trigger:**
+   - **Function:** Updates `AuthenticationTime` for users involved in a new friendship.
 
-- **Trigger Description**: The `updateUserKey` trigger is executed before updating the `Status` of a user in the `users` table. It updates the `UserKey` based on the user's status change. If the user's status changes to "Active," their `UserKey` will be prefixed with "active_," and if the status changes to "Inactive," it will be prefixed with "inactive_."
+5. **`updateUserStatusOnNoFriends` Trigger:**
+   - **Function:** Updates user status to 'Inactive' if they have no friends.
 
-These triggers ensure that user-related information is kept up-to-date based on user actions and status changes.
+6. **`updateUserStatusOnUnreadMessages` Trigger:**
+   - **Function:** Updates user status to 'Active' if they receive a new unread message.
 
-This comprehensive documentation provides a detailed insight into the Chat Application Model Database, including its schema, example queries, query outputs, and triggers. It serves as a valuable resource for understanding, implementing, and maintaining the database within the context of a chat application.
+7. **`deleteOldMessages` Trigger:**
+   - **Function:** Deletes messages older than 6 months after a new message is inserted.
+
+## Stored Procedures
+
+1. **`SendMessage` Stored Procedure:**
+   - **Function:** Inserts a new message into the `messages` table.
+
+   ```sql
+   CALL SendMessage(1, 2, 'Hello, Sheetal!');
+   ```
+
+2. **`markAllMessagesAsRead` Stored Procedure:**
+   - **Function:** Marks all messages as read for a specific user.
+
+   ```sql
+   CALL markAllMessagesAsRead(1);
+   ```
+
+3. **`deleteUserAndMessages` Stored Procedure:**
+   - **Function:** Deletes a user and their associated messages.
+
+   ```sql
+   CALL deleteUserAndMessages(2);
+   ```
+
+4. **`getFriendList` Stored Procedure:**
+   - **Function:** Retrieves a list of friends for a user.
+
+   ```sql
+   CALL getFriendList(1);
+   ```
+
+5. **`getLatestMessage` Stored Procedure:**
+   - **Function:** Retrieves the latest message for a specific user.
+
+   ```sql
+   CALL getLatestMessage(1);
+   ```
+
+## Queries
+
+1. **Retrieve all users and their friendships:**
+
+   ```sql
+   SELECT u.ID AS UserID, u.Username, u.Email, f.FriendID, fu.Username AS FriendUsername, fu.Email AS FriendEmail
+   FROM users u
+   JOIN friends f ON u.ID = f.ID
+   JOIN users fu ON f.FriendID = fu.ID;
+   ```
+
+   **Example Output:**
+   | UserID | Username | Email              | FriendID | FriendUsername | FriendEmail         |
+   |--------|----------|--------------------|----------|-----------------|---------------------|
+   | 1      | Sudhanshu | sudhanshu@email.com    | 2        | Sheetal           | sheetal@email.com    |
+   | 1      | Sudhanshu | sudhanshu@email.com    | 3        | Arun           | arun@email.com    |
+   | 2      | Sheetal    | sheetal@email.com    | 1        | Sudhanshu           | sudhanshu@email.com    |
+   | 3      | Arun    | arun@email.com    | 1        | Sudhanshu           | sudhanshu@email.com    |
+
+2. **Fetch messages sent by a specific user with sender and receiver details:**
+
+   ```sql
+   SELECT m.ID AS MessageID, m.FROMUID AS SenderID, u1.Username AS SenderUsername,
+          m.ToUID AS ReceiverID, u2.Username AS ReceiverUsername, m.SentDt AS SentDateTime, m.MessageText
+   FROM messages m
+   JOIN users u1 ON m.FROMUID = u1.ID
+   JOIN users u2 ON m.ToUID = u2.ID
+   WHERE m.FROMUID = 1;
+   ```
+
+   **Example Output:**
+   | MessageID | SenderID | SenderUsername | ReceiverID | ReceiverUsername | SentDateTime      | MessageText         |
+   |-----------|----------|-----------------|------------|------------------|-------------------|---------------------|
+   | 1         | 1        | Sudhanshu           | 2          | Sheetal            | 2023-01-01 12:00  | Hello, Sheetal!      |
+   | 2         | 1        | Sudhanshu           | 3          | Arun              | 2023-01-02 14:30  | Hi, Sudhanshu!         |
+
+3. **Obtain all messages exchanged between friends:**
+
+   ```sql
+   SELECT m.ID AS MessageID, m.FROMUID, m.ToUID, m
+
+    .SentDt, m.MessageText
+   FROM messages m
+   JOIN friends f ON (m.FROMUID = f.ID AND m.ToUID = f.FriendID) OR (m.FROMUID = f.FriendID AND m.ToUID = f.ID);
+   ```
+
+   **Example Output:**
+   | MessageID | SenderID | ReceiverID | SentDateTime      | MessageText         |
+   |-----------|----------|------------|-------------------|---------------------|
+   | 1         | 1        | 2          | 2023-01-01 12:00  | Hello, Sheetal!      |
+   | 2         | 2        | 1          | 2023-01-02 14:30  | Hi, Sudhanshu!         |
+
+4. **Identify unread messages for a specific user:**
+
+   ```sql
+   SELECT m.ID AS MessageID, m.FROMUID, u.Username AS SenderUsername, m.ToUID, m.SentDt AS SentDateTime, m.MessageText
+   FROM messages m
+   JOIN users u ON m.FROMUID = u.ID
+   WHERE m.ToUID = 1 AND m.ReadStatus = 'Unread';
+   ```
+
+   **Example Output:**
+   | MessageID | SenderID | SenderUsername | ReceiverID | SentDateTime      | MessageText         |
+   |-----------|----------|-----------------|------------|-------------------|---------------------|
+   | 3         | 3        | Arun           | 1          | 2023-01-03 10:45  | Unread message     |
+   
+
+5. **List users with a specific status:**
+
+   ```sql
+   SELECT ID AS UserID, Username, Email, Status
+   FROM users
+   WHERE Status = 'Active';
+   ```
+
+   **Example Output:**
+   | UserID | Username | Email              | Status  |
+   |--------|----------|--------------------|---------|
+   | 1      | Sudhanshu    | sudhanshu@email.com    | Active  |
+   | 2      | Sheetal    | sheetal@email.com    | Active  |
+   
+
+6. **Retrieve messages sent by users with a specific status:**
+
+   ```sql
+   SELECT m.ID AS MessageID, m.FROMUID, u.Username AS SenderUsername, m.ToUID, m.SentDt AS SentDateTime, m.MessageText
+   FROM messages
+   JOIN users u ON m.FROMUID = u.ID
+   WHERE u.Status = 'Active';
+   ```
+
+   **Example Output:**
+   | MessageID | SenderID | SenderUsername | ReceiverID | SentDateTime      | MessageText         |
+   |-----------|----------|-----------------|------------|-------------------|---------------------|
+   | 1         | 1        | Sudhanshu           | 2          | 2023-01-01 12:00  | Hello, Sheetal!      |
+   | 2         | 2        | Sheetal           | 1          | 2023-01-02 14:30  | Hi, Sudhanshu!         |
+   | 3         | 3        | Arun           | 1          | 2023-01-03 10:45  | Unread message     |
+
+---
+
+🌟 **Thank you for exploring the Chat Application Model Database!** 🚀
+
+We believe in the magic of connecting people through technology. May your coding journey be as smooth as a well-optimized SQL query and your friendships as resilient as a robust database schema.
+
+Feel free to reach out for any queries, collaborations, or just to share your success stories. Happy coding, and may your code always compile without errors!
+
+Keep sparking creativity, keep building connections! 🌐✨
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
