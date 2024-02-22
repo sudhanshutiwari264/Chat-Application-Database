@@ -11,247 +11,254 @@
             }
         </style>
     </head>
-    <body class="bg-gray-100 font-sans">
-        <header class="bg-gray-800 text-white p-4">
-            <div class="container mx-auto">
-                <h1 class="text-3xl font-semibold">Chat Application Model Database Documentation</h1>
+    <header class="bg-gray-900 text-white py-6">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center">
+                <img src="logo.png" alt="Logo" class="h-10 mr-2">
+                <h1 class="text-3xl font-semibold">Chat Application Database Documentation</h1>
             </div>
-        </header>
-        <div class="container mx-auto flex flex-wrap py-4">
-            <aside class="w-full md:w-1/4 bg-gray-200 p-4">
-                <h2 class="text-xl font-semibold mb-2">Folder Structure</h2>
-                <ul>
-                    <li><a href="#overview" class="text-blue-600 hover:underline">Overview</a></li>
-                    <li><a href="#er-diagram" class="text-blue-600 hover:underline">ER-Diagram</a></li>
-                    <li><a href="#schema" class="text-blue-600 hover:underline">Database Schema</a></li>
-                    <li><a href="#triggers" class="text-blue-600 hover:underline">Triggers</a></li>
-                    <li><a href="#stored-procedures" class="text-blue-600 hover:underline">Stored Procedures</a></li>
-                    <li><a href="#queries" class="text-blue-600 hover:underline">Queries</a></li>
+            <nav class="mt-4 md:mt-0">
+                <ul class="flex space-x-4">
+                    <li><a href="#database-overview" class="hover:text-gray-300">Overview</a></li>
+                    <li><a href="#er-diagram" class="hover:text-gray-300">ER Diagram</a></li>
+                    <li><a href="#database-schema" class="hover:text-gray-300">Database Schema</a></li>
+                    <li><a href="#triggers" class="hover:text-gray-300">Triggers</a></li>
+                    <li><a href="#stored-procedures" class="hover:text-gray-300">Stored Procedures</a></li>
+                    <li><a href="#queries" class="hover:text-gray-300">Queries</a></li>
+                    <li><a href="#sql-file" class="hover:text-gray-300">SQL File</a></li>
                 </ul>
-            </aside>
-            <main class="w-full md:w-3/4 p-4 bg-white">
-                <section id="overview" class="markdown-content">
-                    <h2 class="text-2xl font-semibold mb-4">Database Overview</h2>
-                    <p class="mb-4">The Chat Application Model Database is designed to provide a robust and structured data storage solution for a chat application. It serves as the backbone for managing user accounts, friend relationships, and chat messaging features within the application.</p>
-                    <p>This comprehensive documentation covers the database schema, tables, relationships, sample queries with outputs, and details about the implemented triggers.</p>
-                    <p class="mt-4">For more details, you can also refer to the <a href="https://github.com/sudhanshutiwari264/Chat-Application-Database/blob/64eaa77ce77bc75e30fc7305ca845421003672a3/Chat_Application_DBMS.sql" class="text-blue-600 hover:underline">Chat Application Model Database SQL file</a> on GitHub.</p>
-                </section>
-                <section id="sql-file" class="markdown-content">
-    <h2 class="text-2xl font-semibold mb-4">Chat Application Model Database SQL File</h2>
-    <iframe src="./Chat_Application_DBMS.sql" class="w-full h-96 border border-gray-300"></iframe>
-</section>
-
-                <section id="er-diagram" class="markdown-content">
-                    <h2 class="text-2xl font-semibold mb-4">ER-Diagram</h2>
-                    <p class="mb-4">The ER-Diagram illustrates the entity-relationship model of the Chat Application Model Database. It visually represents the structure of the database, including entities, attributes, and relationships between them.</p>
-                    <img src="./chat%20application_er.png" alt="ER Diagram" class="max-w-full h-auto mb-4">
-                    <p class="mt-4">For a detailed understanding of the database schema and relationships, refer to the ER-Diagram image provided above.</p>
-                </section>
-                <section id="schema" class="markdown-content">
-                    <h2 class="text-2xl font-semibold mb-4">Database Schema</h2>
-                    <p class="mb-4">The database schema consists of four primary tables: <code>admin</code>, <code>users</code>, <code>friends</code>, and <code>messages</code>. Each table serves a distinct purpose in supporting various aspects of the chat application.</p>
-                    <h3 class="text-xl font-semibold mb-2">Users Table</h3>
-                    <p class="mb-2">The <code>users</code> table stores information about registered users in the chat application.</p>
-                    <ul class="list-disc pl-6 mb-4">
-                        <li><strong>ID</strong> (INT, Primary Key): Unique identifier for each user.</li>
-                        <li><strong>Username</strong> (VARCHAR): User's username.</li>
-                        <li><strong>Email</strong> (VARCHAR): User's email address.</li>
-                        <li><strong>Status</strong> (VARCHAR): User's status, can be 'Active' or 'Inactive'.</li>
-                        <li><strong>AuthenticationTime</strong> (DATETIME): Timestamp of the user's last authentication.</li>
-                    </ul>
-                    <h3 class="text-xl font-semibold mb-2">Friends Table</h3>
-                    <p class="mb-2">The <code>friends</code> table maintains the relationships between users who are friends in the chat application.</p>
-                    <ul class="list-disc pl-6 mb-4">
-                        <li><strong>ID</strong> (INT, Foreign Key): User ID.</li>
-                        <li><strong>FriendID</strong> (INT, Foreign Key): Friend's ID.</li>
-                    </ul>
-                    <h3 class="text-xl font-semibold mb-2">Messages Table</h3>
-                    <p class="mb-2">The <code>messages</code> table stores chat messages exchanged between users.</p>
-                    <ul class="list-disc pl-6 mb-4">
-                        <li><strong>ID</strong> (INT, Primary Key): Unique identifier for each message.</li>
-                        <li><strong>FROMUID</strong> (INT, Foreign Key): Sender's ID.</li>
-                        <li><strong>ToUID</strong> (INT, Foreign Key): Receiver's ID.</li>
-                        <li><strong>MessageText</strong> (TEXT): The content of the message.</li>
-                        <li><strong>SentDt</strong> (DATETIME): Timestamp when the message was sent.</li>
-                        <li><strong>ReadStatus</strong> (VARCHAR): Message read status, can be 'Read' or 'Unread'.</li>
-                    </ul>
-                </section>
-                <section id="triggers" class="markdown-content">
-                    <h2 class="text-2xl font-semibold mb-4">Triggers</h2>
-                    <p class="mb-4">Triggers in the database are used to automatically perform actions or enforce rules when certain events occur in the tables. Here are the triggers implemented in the chat application model database:</p>
-                    <ol class="list-decimal pl-6 mb-4">
-                        <li>
-                            <h3 class="text-xl font-semibold mb-2">updateAuthenticationTime Trigger</h3>
-                            <p>Function: Updates the <code>AuthenticationTime</code> of the sender when a new message is sent.</p>
-                        </li>
-                        <li>
-                            <h3 class="text-xl font-semibold mb-2">updateUserKey Trigger</h3>
-                            <p>Function: Updates the <code>UserKey</code> based on the user's <code>Status</code> before each update.</p>
-                        </li>
-                        <li>
-                            <h3 class="text-xl font-semibold mb-2">updateUserKeyOnStatusChange Trigger</h3>
-                            <p>Function: Updates <code>UserKey</code> when there is a change in the user's <code>Status</code>.</p>
-                        </li>
-                        <li>
-                            <h3 class="text-xl font-semibold mb-2">updateAuthTimeOnFriendAdd Trigger</h3>
-                            <p>Function: Updates <code>AuthenticationTime</code> for users involved in a new friendship.</p>
-                        </li>
-                        <li>
-                            <h3 class="text-xl font-semibold mb-2">updateUserStatusOnNoFriends Trigger</h3>
-                            <p>Function: Updates user status to 'Inactive' if they have no friends.</p>
-                        </li>
-                        <li>
-                            <h3 class="text-xl font-semibold mb-2">updateUserStatusOnUnreadMessages Trigger</h3>
-                            <p>Function: Updates user status to 'Active' if they receive a new unread message.</p>
-                        </li>
-                        <li>
-                            <h3 class="text-xl font-semibold mb-2">deleteOldMessages Trigger</h3>
-                            <p>Function: Deletes messages older than 6 months after a new message is inserted.</p>
-                        </li>
-                    </ol>
-                </section>
-                <section id="stored-procedures" class="markdown-content">
-                    <h2 class="text-2xl font-semibold mb-4">Stored Procedures</h2>
-                    <p class="mb-4">Stored procedures are precompiled SQL statements that are stored in the database and can be executed by the database management system. Here are the stored procedures implemented in the chat application model database:</p>
-                    <ol class="list-decimal pl-6 mb-4">
-                        <li>
-                            <h3 class="text-xl font-semibold mb-2">SendMessage Stored Procedure</h3>
-                            <p>Function: Inserts a new message into the <code>messages</code> table.</p>
-                            <pre class="mb-2"><code>CALL SendMessage(1, 2, 'Hello, Sheetal!');</code></pre>
-                        </li>
-                        <li>
-                            <h3 class="text-xl font-semibold mb-2">markAllMessagesAsRead Stored Procedure</h3>
-                            <p>Function: Marks all messages as read for a specific user.</p>
-                            <pre class="mb-2"><code>CALL markAllMessagesAsRead(1);</code></pre>
-                        </li>
-                        <li>
-                            <h3 class="text-xl font-semibold mb-2">deleteUserAndMessages Stored Procedure</h3>
-                            <p>Function: Deletes a user and their associated messages.</p>
-                            <pre class="mb-2"><code>CALL deleteUserAndMessages(2);</code></pre>
-                        </li>
-                        <li>
-                            <h3 class="text-xl font-semibold mb-2">getFriendList Stored Procedure</h3>
-                            <p>Function: Retrieves a list of friends for a user.</p>
-                            <pre class="mb-2"><code>CALL getFriendList(1);</code></pre>
-                        </li>
-                        <li>
-                            <h3 class="text-xl font-semibold mb-2">getLatestMessage Stored Procedure</h3>
-                            <p>Function: Retrieves the latest message for a specific user.</p>
-                            <pre class="mb-2"><code>CALL getLatestMessage(1);</code></pre>
-                        </li>
-                    </ol>
-                </section>
-                <section id="queries" class="markdown-content">
-                    <h2 class="text-2xl font-semibold mb-4">Queries</h2>
-                    <p class="mb-4">Queries are SQL statements used to retrieve specific data from the database. Here are some example queries along with their outputs:</p>
-                    <ol class="list-decimal pl-6 mb-4">
-                        <li>
-                            <h3 class="text-xl font-semibold mb-2">Retrieve all users and their friendships:</h3>
-                            <pre class="mb-2"><code>SELECT u.ID AS UserID, u.Username, u.Email, f.FriendID, fu.Username AS FriendUsername, fu.Email AS FriendEmail
+            </nav>
+        </div>
+    </header>
+    <div class="container mx-auto flex flex-wrap py-4">
+        <aside class="w-full md:w-1/4 bg-gray-200 p-4">
+            <h2 class="text-xl font-semibold mb-2">Folder Structure</h2>
+            <ul>
+                <li><a href="#overview" class="text-blue-600 hover:underline">Overview</a></li>
+                <li><a href="#er-diagram" class="text-blue-600 hover:underline">ER-Diagram</a></li>
+                <li><a href="#schema" class="text-blue-600 hover:underline">Database Schema</a></li>
+                <li><a href="#triggers" class="text-blue-600 hover:underline">Triggers</a></li>
+                <li><a href="#stored-procedures" class="text-blue-600 hover:underline">Stored Procedures</a></li>
+                <li><a href="#queries" class="text-blue-600 hover:underline">Queries</a></li>
+            </ul>
+        </aside>
+        <main class="w-full md:w-3/4 p-4 bg-white">
+            <section id="overview" class="markdown-content">
+                <h2 class="text-2xl font-semibold mb-4">Database Overview</h2>
+                <p class="mb-4">The Chat Application Model Database is designed to provide a robust and structured data storage solution for a chat application. It serves as the backbone for managing user accounts, friend relationships, and chat messaging features within the application.</p>
+                <p>This comprehensive documentation covers the database schema, tables, relationships, sample queries with outputs, and details about the implemented triggers.</p>
+                <p class="mt-4">For more details, you can also refer to the <a href="https://github.com/sudhanshutiwari264/Chat-Application-Database/blob/64eaa77ce77bc75e30fc7305ca845421003672a3/Chat_Application_DBMS.sql" class="text-blue-600 hover:underline">Chat Application Model Database SQL file</a> on GitHub.</p>
+            </section>
+            <section id="er-diagram" class="markdown-content">
+                <h2 class="text-2xl font-semibold mb-4">ER-Diagram</h2>
+                <p class="mb-4">The ER-Diagram illustrates the entity-relationship model of the Chat Application Model Database. It visually represents the structure of the database, including entities, attributes, and relationships between them.</p>
+                <img src="./chat%20application_er.png" alt="ER Diagram" class="max-w-full h-auto mb-4">
+                <p class="mt-4">For a detailed understanding of the database schema and relationships, refer to the ER-Diagram image provided above.</p>
+            </section>
+            <section id="schema" class="markdown-content">
+                <h2 class="text-2xl font-semibold mb-4">Database Schema</h2>
+                <p class="mb-4">The database schema consists of four primary tables: <code>admin</code>, <code>users</code>, <code>friends</code>, and <code>messages</code>. Each table serves a distinct purpose in supporting various aspects of the chat application.</p>
+                <h3 class="text-xl font-semibold mb-2">Users Table</h3>
+                <p class="mb-2">The <code>users</code> table stores information about registered users in the chat application.</p>
+                <ul class="list-disc pl-6 mb-4">
+                    <li><strong>ID</strong> (INT, Primary Key): Unique identifier for each user.</li>
+                    <li><strong>Username</strong> (VARCHAR): User's username.</li>
+                    <li><strong>Email</strong> (VARCHAR): User's email address.</li>
+                    <li><strong>Status</strong> (VARCHAR): User's status, can be 'Active' or 'Inactive'.</li>
+                    <li><strong>AuthenticationTime</strong> (DATETIME): Timestamp of the user's last authentication.</li>
+                </ul>
+                <h3 class="text-xl font-semibold mb-2">Friends Table</h3>
+                <p class="mb-2">The <code>friends</code> table maintains the relationships between users who are friends in the chat application.</p>
+                <ul class="list-disc pl-6 mb-4">
+                    <li><strong>ID</strong> (INT, Foreign Key): User ID.</li>
+                    <li><strong>FriendID</strong> (INT, Foreign Key): Friend's ID.</li>
+                </ul>
+                <h3 class="text-xl font-semibold mb-2">Messages Table</h3>
+                <p class="mb-2">The <code>messages</code> table stores chat messages exchanged between users.</p>
+                <ul class="list-disc pl-6 mb-4">
+                    <li><strong>ID</strong> (INT, Primary Key): Unique identifier for each message.</li>
+                    <li><strong>FROMUID</strong> (INT, Foreign Key): Sender's ID.</li>
+                    <li><strong>ToUID</strong> (INT, Foreign Key): Receiver's ID.</li>
+                    <li><strong>MessageText</strong> (TEXT): The content of the message.</li>
+                    <li><strong>SentDt</strong> (DATETIME): Timestamp when the message was sent.</li>
+                    <li><strong>ReadStatus</strong> (VARCHAR): Message read status, can be 'Read' or 'Unread'.</li>
+                </ul>
+            </section>
+            <section id="triggers" class="markdown-content">
+                <h2 class="text-2xl font-semibold mb-4">Triggers</h2>
+                <p class="mb-4">Triggers in the database are used to automatically perform actions or enforce rules when certain events occur in the tables. Here are the triggers implemented in the chat application model database:</p>
+                <ol class="list-decimal pl-6 mb-4">
+                    <li>
+                        <h3 class="text-xl font-semibold mb-2">updateAuthenticationTime Trigger</h3>
+                        <p>Function: Updates the <code>AuthenticationTime</code> of the sender when a new message is sent.</p>
+                    </li>
+                    <li>
+                        <h3 class="text-xl font-semibold mb-2">updateUserKey Trigger</h3>
+                        <p>Function: Updates the <code>UserKey</code> based on the user's <code>Status</code> before each update.</p>
+                    </li>
+                    <li>
+                        <h3 class="text-xl font-semibold mb-2">updateUserKeyOnStatusChange Trigger</h3>
+                        <p>Function: Updates <code>UserKey</code> when there is a change in the user's <code>Status</code>.</p>
+                    </li>
+                    <li>
+                        <h3 class="text-xl font-semibold mb-2">updateAuthTimeOnFriendAdd Trigger</h3>
+                        <p>Function: Updates <code>AuthenticationTime</code> for users involved in a new friendship.</p>
+                    </li>
+                    <li>
+                        <h3 class="text-xl font-semibold mb-2">updateUserStatusOnNoFriends Trigger</h3>
+                        <p>Function: Updates user status to 'Inactive' if they have no friends.</p>
+                    </li>
+                    <li>
+                        <h3 class="text-xl font-semibold mb-2">updateUserStatusOnUnreadMessages Trigger</h3>
+                        <p>Function: Updates user status to 'Active' if they receive a new unread message.</p>
+                    </li>
+                    <li>
+                        <h3 class="text-xl font-semibold mb-2">deleteOldMessages Trigger</h3>
+                        <p>Function: Deletes messages older than 6 months after a new message is inserted.</p>
+                    </li>
+                </ol>
+            </section>
+            <section id="stored-procedures" class="markdown-content">
+                <h2 class="text-2xl font-semibold mb-4">Stored Procedures</h2>
+                <p class="mb-4">Stored procedures are precompiled SQL statements that are stored in the database and can be executed by the database management system. Here are the stored procedures implemented in the chat application model database:</p>
+                <ol class="list-decimal pl-6 mb-4">
+                    <li>
+                        <h3 class="text-xl font-semibold mb-2">SendMessage Stored Procedure</h3>
+                        <p>Function: Inserts a new message into the <code>messages</code> table.</p>
+                        <pre class="mb-2"><code>CALL SendMessage(1, 2, 'Hello, Sheetal!');</code></pre>
+                    </li>
+                    <li>
+                        <h3 class="text-xl font-semibold mb-2">markAllMessagesAsRead Stored Procedure</h3>
+                        <p>Function: Marks all messages as read for a specific user.</p>
+                        <pre class="mb-2"><code>CALL markAllMessagesAsRead(1);</code></pre>
+                    </li>
+                    <li>
+                        <h3 class="text-xl font-semibold mb-2">deleteUserAndMessages Stored Procedure</h3>
+                        <p>Function: Deletes a user and their associated messages.</p>
+                        <pre class="mb-2"><code>CALL deleteUserAndMessages(2);</code></pre>
+                    </li>
+                    <li>
+                        <h3 class="text-xl font-semibold mb-2">getFriendList Stored Procedure</h3>
+                        <p>Function: Retrieves a list of friends for a user.</p>
+                        <pre class="mb-2"><code>CALL getFriendList(1);</code></pre>
+                    </li>
+                    <li>
+                        <h3 class="text-xl font-semibold mb-2">getLatestMessage Stored Procedure</h3>
+                        <p>Function: Retrieves the latest message for a specific user.</p>
+                        <pre class="mb-2"><code>CALL getLatestMessage(1);</code></pre>
+                    </li>
+                </ol>
+            </section>
+            <section id="queries" class="markdown-content">
+                <h2 class="text-2xl font-semibold mb-4">Queries</h2>
+                <p class="mb-4">Queries are SQL statements used to retrieve specific data from the database. Here are some example queries along with their outputs:</p>
+                <ol class="list-decimal pl-6 mb-4">
+                    <li>
+                        <h3 class="text-xl font-semibold mb-2">Retrieve all users and their friendships:</h3>
+                        <pre class="mb-2"><code>SELECT u.ID AS UserID, u.Username, u.Email, f.FriendID, fu.Username AS FriendUsername, fu.Email AS FriendEmail
 FROM users u
 JOIN friends f ON u.ID = f.ID
 JOIN users fu ON f.FriendID = fu.ID;</code></pre>
-                            <p class="mb-4"><strong>Example Output:</strong></p>
-                            <table class="border-collapse border border-gray-300">
-                                <thead>
-                                    <tr>
-                                        <th class="border border-gray-300 px-4 py-2">UserID</th>
-                                        <th class="border border-gray-300 px-4 py-2">Username</th>
-                                        <th class="border border-gray-300 px-4 py-2">Email</th>
-                                        <th class="border border-gray-300 px-4 py-2">FriendID</th>
-                                        <th class="border border-gray-300 px-4 py-2">FriendUsername</th>
-                                        <th class="border border-gray-300 px-4 py-2">FriendEmail</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="border border-gray-300 px-4 py-2">1</td>
-                                        <td class="border border-gray-300 px-4 py-2">Sudhanshu</td>
-                                        <td class="border border-gray-300 px-4 py-2">sudhanshu@email.com</td>
-                                        <td class="border border-gray-300 px-4 py-2">2</td>
-                                        <td class="border border-gray-300 px-4 py-2">Sheetal</td>
-                                        <td class="border border-gray-300 px-4 py-2">sheetal@email.com</td>
-                                    </tr>
-                                    <!-- Additional rows -->
-                                    <tr>
-                                        <td class="border border-gray-300 px-4 py-2">2</td>
-                                        <td class="border border-gray-300 px-4 py-2">Sheetal</td>
-                                        <td class="border border-gray-300 px-4 py-2">sheetal@email.com</td>
-                                        <td class="border border-gray-300 px-4 py-2">1</td>
-                                        <td class="border border-gray-300 px-4 py-2">Sudhanshu</td>
-                                        <td class="border border-gray-300 px-4 py-2">sudhanshu@email.com</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </li>
-                        <li>
-                            <h3 class="text-xl font-semibold mb-2">Fetch messages sent by a specific user with sender and receiver details:</h3>
-                            <pre class="mb-2"><code>SELECT m.ID AS MessageID, m.FROMUID AS SenderID, u1.Username AS SenderUsername,
+                        <p class="mb-4"><strong>Example Output:</strong></p>
+                        <table class="border-collapse border border-gray-300">
+                            <thead>
+                                <tr>
+                                    <th class="border border-gray-300 px-4 py-2">UserID</th>
+                                    <th class="border border-gray-300 px-4 py-2">Username</th>
+                                    <th class="border border-gray-300 px-4 py-2">Email</th>
+                                    <th class="border border-gray-300 px-4 py-2">FriendID</th>
+                                    <th class="border border-gray-300 px-4 py-2">FriendUsername</th>
+                                    <th class="border border-gray-300 px-4 py-2">FriendEmail</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border border-gray-300 px-4 py-2">1</td>
+                                    <td class="border border-gray-300 px-4 py-2">Sudhanshu</td>
+                                    <td class="border border-gray-300 px-4 py-2">sudhanshu@email.com</td>
+                                    <td class="border border-gray-300 px-4 py-2">2</td>
+                                    <td class="border border-gray-300 px-4 py-2">Sheetal</td>
+                                    <td class="border border-gray-300 px-4 py-2">sheetal@email.com</td>
+                                </tr>
+                                <!-- Additional rows -->
+                                <tr>
+                                    <td class="border border-gray-300 px-4 py-2">2</td>
+                                    <td class="border border-gray-300 px-4 py-2">Sheetal</td>
+                                    <td class="border border-gray-300 px-4 py-2">sheetal@email.com</td>
+                                    <td class="border border-gray-300 px-4 py-2">1</td>
+                                    <td class="border border-gray-300 px-4 py-2">Sudhanshu</td>
+                                    <td class="border border-gray-300 px-4 py-2">sudhanshu@email.com</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </li>
+                    <li>
+                        <h3 class="text-xl font-semibold mb-2">Fetch messages sent by a specific user with sender and receiver details:</h3>
+                        <pre class="mb-2"><code>SELECT m.ID AS MessageID, m.FROMUID AS SenderID, u1.Username AS SenderUsername,
        m.ToUID AS ReceiverID, u2.Username AS ReceiverUsername, m.SentDt AS SentDateTime, m.MessageText
 FROM messages m
 JOIN users u1 ON m.FROMUID = u1.ID
 JOIN users u2 ON m.ToUID = u2.ID
 WHERE m.FROMUID = 1;</code></pre>
-                            <p class="mb-4"><strong>Example Output:</strong></p>
-                            <table class="border-collapse border border-gray-300">
-                                <thead>
-                                    <tr>
-                                        <th class="border border-gray-300 px-4 py-2">MessageID</th>
-                                        <th class="border border-gray-300 px-4 py-2">SenderID</th>
-                                        <th class="border border-gray-300 px-4 py-2">SenderUsername</th>
-                                        <th class="border border-gray-300 px-4 py-2">ReceiverID</th>
-                                        <th class="border border-gray-300 px-4 py-2">ReceiverUsername</th>
-                                        <th class="border border-gray-300 px-4 py-2">SentDateTime</th>
-                                        <th class="border border-gray-300 px-4 py-2">MessageText</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="border border-gray-300 px-4 py-2">1</td>
-                                        <td class="border border-gray-300 px-4 py-2">1</td>
-                                        <td class="border border-gray-300 px-4 py-2">Sudhanshu</td>
-                                        <td class="border border-gray-300 px-4 py-2">2</td>
-                                        <td class="border border-gray-300 px-4 py-2">Sheetal</td>
-                                        <td class="border border-gray-300 px-4 py-2">2023-01-01 12:00</td>
-                                        <td class="border border-gray-300 px-4 py-2">Hello, Sheetal!</td>
-                                    </tr>
-                                    <!-- Additional row -->
-                                    <tr>
-                                        <td class="border border-gray-300 px-4 py-2">2</td>
-                                        <td class="border border-gray-300 px-4 py-2">1</td>
-                                        <td class="border border-gray-300 px-4 py-2">Sudhanshu</td>
-                                        <td class="border border-gray-300 px-4 py-2">3</td>
-                                        <td class="border border-gray-300 px-4 py-2">Arun</td>
-                                        <td class="border border-gray-300 px-4 py-2">2023-01-02 14:30</td>
-                                        <td class="border border-gray-300 px-4 py-2">Hi, Sudhanshu!</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </li>
-                    </ol>
-                </section>
-            </main>
-        </div>
-<footer class="bg-gray-900 text-white py-8">
-    <div class="container mx-auto text-center">
-        <p class="text-lg font-semibold mb-4">Thank you for exploring the Chat Application Model Database!</p>
-        <p class="mb-4">We believe in the magic of connecting people through technology. May your coding journey be as smooth as a well-optimized SQL query and your friendships as resilient as a robust database schema.</p>
-        <p class="mb-4">Feel free to reach out for any queries, collaborations, or just to share your success stories. Happy coding, and may your code always compile without errors!</p>
-        <p class="mb-4">Keep sparking creativity, keep building connections! 🌐✨</p>
+                        <p class="mb-4"><strong>Example Output:</strong></p>
+                        <table class="border-collapse border border-gray-300">
+                            <thead>
+                                <tr>
+                                    <th class="border border-gray-300 px-4 py-2">MessageID</th>
+                                    <th class="border border-gray-300 px-4 py-2">SenderID</th>
+                                    <th class="border border-gray-300 px-4 py-2">SenderUsername</th>
+                                    <th class="border border-gray-300 px-4 py-2">ReceiverID</th>
+                                    <th class="border border-gray-300 px-4 py-2">ReceiverUsername</th>
+                                    <th class="border border-gray-300 px-4 py-2">SentDateTime</th>
+                                    <th class="border border-gray-300 px-4 py-2">MessageText</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border border-gray-300 px-4 py-2">1</td>
+                                    <td class="border border-gray-300 px-4 py-2">1</td>
+                                    <td class="border border-gray-300 px-4 py-2">Sudhanshu</td>
+                                    <td class="border border-gray-300 px-4 py-2">2</td>
+                                    <td class="border border-gray-300 px-4 py-2">Sheetal</td>
+                                    <td class="border border-gray-300 px-4 py-2">2023-01-01 12:00</td>
+                                    <td class="border border-gray-300 px-4 py-2">Hello, Sheetal!</td>
+                                </tr>
+                                <!-- Additional row -->
+                                <tr>
+                                    <td class="border border-gray-300 px-4 py-2">2</td>
+                                    <td class="border border-gray-300 px-4 py-2">1</td>
+                                    <td class="border border-gray-300 px-4 py-2">Sudhanshu</td>
+                                    <td class="border border-gray-300 px-4 py-2">3</td>
+                                    <td class="border border-gray-300 px-4 py-2">Arun</td>
+                                    <td class="border border-gray-300 px-4 py-2">2023-01-02 14:30</td>
+                                    <td class="border border-gray-300 px-4 py-2">Hi, Sudhanshu!</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </li>
+                </ol>
+            </section>
+        </main>
     </div>
-</footer>
-
-        <script src="lib/markdown.js"></script>
-        <script>
-            function Editor(input, preview) {
-                this.update = function() {
-                    preview.innerHTML = markdown.toHTML(input.value);
-                };
-                input.editor = this;
-                this.update();
-            }
-            var $ = function(id) { return document.getElementById(id); };
-            new Editor($("text-input"), $("preview"));
-        </script>
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="container mx-auto text-center">
+            <p class="text-lg font-semibold mb-4">Thank you for exploring the Chat Application Model Database!</p>
+            <p class="mb-4">We believe in the magic of connecting people through technology. May your coding journey be as smooth as a well-optimized SQL query and your friendships as resilient as a robust database schema.</p>
+            <p class="mb-4">Feel free to reach out for any queries, collaborations, or just to share your success stories. Happy coding, and may your code always compile without errors!</p>
+            <p class="mb-4">Keep sparking creativity, keep building connections! 🌐✨</p>
+        </div>
+    </footer>
+    <script src="lib/markdown.js"></script>
+    <script>
+        function Editor(input, preview) {
+            this.update = function() {
+                preview.innerHTML = markdown.toHTML(input.value);
+            };
+            input.editor = this;
+            this.update();
+        }
+        var $ = function(id) { return document.getElementById(id); };
+        new Editor($("text-input"), $("preview"));
+    </script>
     </body>
 </html>
